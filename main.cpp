@@ -42,7 +42,7 @@ int main(int argc, char const *argv[])
   long long NN2 = N * (N - 1) / 2;
 
   vector<pair<int, int>> vs(NN2);
-  vector<int> edge_count(NN2, 0);
+  vector<vector<int>> edge_count(NN2 + 1);
   map<vector<int>, int> sorted_list_2_num;
 
   long long counter = 0;
@@ -57,17 +57,18 @@ int main(int argc, char const *argv[])
       }
     }
   }
-  // return 0;
 
   cout << N << endl;
   for (int i = 0; i < M; i++)
   {
+    long long edge_counter = 0;
     vector<int> v(N, 0);
     for (int j = 0; j < NN2; j++)
     {
       if ((node.at(N).at(i) >> j) & 1)
       {
         cout << 1;
+        edge_counter++;
         v.at(vs.at(j).first)++;
         v.at(vs.at(j).second)++;
       }
@@ -77,6 +78,7 @@ int main(int argc, char const *argv[])
       }
     }
     cout << endl;
+    edge_count.at(edge_counter).push_back(i);
     sort(v.begin(), v.end());
     sorted_list_2_num[v] = i;
     // cout << i << '\t';
@@ -90,10 +92,12 @@ int main(int argc, char const *argv[])
     long long ans = 0;
     vector<int> v(N);
     // cout << S << endl;
+    long long edge_counter = 0;
     for (int j = 0; j < NN2; j++)
     {
       if (S.at(j) == '1')
       {
+        edge_counter++;
         v.at(vs.at(j).first)++;
         v.at(vs.at(j).second)++;
       }
@@ -110,6 +114,14 @@ int main(int argc, char const *argv[])
     }
     else
     {
+      if ((0 <= (edge_counter - 1)) &&
+          ((edge_counter - 1 < edge_count.size())) &&
+          (edge_count.at(edge_counter - 1).size() != 0))
+        ans = edge_count.at(edge_counter - 1).at(0);
+      if ((0 <= (edge_counter + 1)) &&
+          ((edge_counter + 1 < edge_count.size())) &&
+          (edge_count.at(edge_counter + 1).size() != 0))
+        ans = edge_count.at(edge_counter + 1).at(0);
     }
     cout << min(ans, M - 1) << endl;
     // cerr << i << endl;
