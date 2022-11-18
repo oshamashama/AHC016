@@ -39,11 +39,19 @@ do
     OUT_FILE=./in/${f1%.txt}.out
     touch tmp_out
     cargo run --release --bin tester ../a.out < $IN_FILE > $OUT_FILE 2> tmp_out
-    Score=`tail +6 tmp_out`
     cat tmp_out >> all_out
-    rm tmp_out
+    Score=`sed -n 6P tmp_out`
     Score_num=${Score#Score\ =\ }
+    N=`sed -n 3P tmp_out`
+    N_num=${N#N\ =\ }
+    E=`sed -n 4P tmp_out`
+    E_num=${E#E\ =\ }
     echo $Score_num >> ../last_score
+    echo "---"$IN_FILE"---"
+    cat tmp_out
+    echo "-"$N_num"   "$E_num"  -"
+    echo "---""---""---"
+    rm tmp_out
     count=$((count + 1))
     sum=$((Score_num + sum))
     # mv vis.html vis/vis${f1%.txt}.html

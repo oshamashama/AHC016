@@ -1,0 +1,1 @@
+cargo run --release --bin tester ../a.out < $1 > $2
