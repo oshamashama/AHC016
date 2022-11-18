@@ -280,6 +280,7 @@ int main(int argc, char const *argv[])
         m.at(vs2.at(j).first).at(vs2.at(j).second) = 1;
       }
     }
+    if (0.001 < e)
     {
       // 1, 縦に繋げる
       dsu d(N * Margin);
@@ -349,20 +350,20 @@ int main(int argc, char const *argv[])
           }
         }
       }
-      for (int j = 0; j < N * Margin; j++)
+    }
+    for (int j = 0; j < N * Margin; j++)
+    {
+      for (int k = 0; k < N * Margin; k++)
       {
-        for (int k = 0; k < N * Margin; k++)
+        if (m.at(j).at(k))
         {
-          if (m.at(j).at(k))
-          {
-            edge_count_list.at(j)++;
-          }
-          if (test_print)
-            cout << m.at(j).at(k);
+          edge_count_list.at(j)++;
         }
         if (test_print)
-          cout << endl;
+          cout << m.at(j).at(k);
       }
+      if (test_print)
+        cout << endl;
     }
 
     ll best_diff = 100000;
@@ -373,7 +374,9 @@ int main(int argc, char const *argv[])
       for (ll k = 0; k < edge_count_list.size(); k++)
       {
         diff += abs(edge_count_list.at(k) - node_size_list.at(j).at(k)) *
-                abs(edge_count_list.at(k) - node_size_list.at(j).at(k));
+                (true
+                     ? abs(edge_count_list.at(k) - node_size_list.at(j).at(k))
+                     : 1);
       }
       if (diff < best_diff)
       {
