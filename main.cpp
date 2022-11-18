@@ -5,11 +5,13 @@
 #include <vector>
 #include <random>
 #include <algorithm>
+#include <atcoder/dsu>
 
 #define ll long long
 
-using namespace std;
 const double time_limit = 4.8 / 10.0;
+using namespace std;
+using namespace atcoder;
 // while (clock() < ll(double(time_limit) * double(CLOCKS_PER_SEC)))
 // {
 // }
@@ -212,7 +214,7 @@ int main(int argc, char const *argv[])
       }
     }
   }
-
+  bool test_print = (argc >= 3 && string(argv[2]) == "print");
   cout << N * Margin << endl;
   for (ll i = 0; i < M; i++)
   {
@@ -239,6 +241,16 @@ int main(int argc, char const *argv[])
       }
     }
     cout << endl;
+    for (int j = 0; j < N * Margin; j++)
+    {
+      for (int k = 0; k < N * Margin; k++)
+      {
+        if (test_print)
+          cout << m.at(j).at(k);
+      }
+      if (test_print)
+        cout << endl;
+    }
     // for (ll j = 0; j < N * Margin; j++)
     // {
     //   v.at(edge_count_list.at(j))++;
@@ -257,20 +269,102 @@ int main(int argc, char const *argv[])
     ll ans = 0;
     vector<ll> edge_count_list(N * Margin, 0);
     vector<ll> v(N * Margin, 0);
+    vector<vector<ll>> m(N * Margin, vector<ll>(N * Margin, 0));
     for (ll j = 0; j < NN2; j++)
     {
       if (S.at(j) == '1')
       {
-        edge_count_list.at(vs2.at(j).first)++;
-        edge_count_list.at(vs2.at(j).second)++;
+        // edge_count_list.at(vs2.at(j).first)++;
+        // edge_count_list.at(vs2.at(j).second)++;
+        m.at(vs2.at(j).second).at(vs2.at(j).first) = 1;
+        m.at(vs2.at(j).first).at(vs2.at(j).second) = 1;
       }
     }
-    // for (ll j = 0; j < N * Margin; j++)
-    // {
-    //   v.at(min(
-    //       (edge_count_list.at(j) + Margin / 2) / Margin * Margin,
-    //       N * Margin - 1))++;
-    // }
+    {
+      // 1, 縦に繋げる
+      dsu d(N * Margin);
+      // -距離, (i,j)
+      priority_queue<pair<int, pair<int, int>>> pq;
+      for (int j = 0; j < N * Margin; j++)
+      {
+        for (int k = 0; k < N * Margin; k++)
+        {
+          ll distance = 0;
+          for (int l = 0; l < N * Margin; l++)
+          {
+            if (m.at(j).at(l) != m.at(k).at(l))
+              distance++;
+          }
+          pq.push(make_pair(-distance, make_pair(j, k)));
+        }
+      }
+      while (pq.size())
+      {
+        pair<int, pair<int, int>> p1 = pq.top();
+        pq.pop();
+        int ei, ej;
+        tie(ei, ej) = p1.second;
+        if (d.size(ei) + d.size(ej) <= Margin)
+        {
+          d.merge(ei, ej);
+        }
+      }
+      vector<vector<int>> mv = d.groups();
+      vector<int> deploy_vector;
+      for (int j = 0; j < mv.size(); j++)
+      {
+        for (int k = 0; k < mv.at(j).size(); k++)
+        {
+          deploy_vector.push_back(mv.at(j).at(k));
+        }
+      }
+      vector<vector<ll>> m_copy = m;
+      for (int j = 0; j < N * Margin; j++)
+      {
+        for (int k = 0; k < N * Margin; k++)
+        {
+          int j_ = deploy_vector.at(j);
+          int k_ = deploy_vector.at(k);
+          m.at(j).at(k) = m_copy.at(j_).at(k_);
+        }
+      }
+      for (int j = 0; j < N; j++)
+      {
+        for (int k = 0; k < N; k++)
+        {
+          ll sum = 0;
+          for (int j_ = 0; j_ < Margin; j_++)
+          {
+            for (int k_ = 0; k_ < Margin; k_++)
+            {
+              sum += m.at(j * Margin + j_).at(k * Margin + k_);
+            }
+          }
+          for (int j_ = 0; j_ < Margin; j_++)
+          {
+            for (int k_ = 0; k_ < Margin; k_++)
+            {
+              m.at(j * Margin + j_).at(k * Margin + k_) = (sum * 2 >= Margin * Margin) * (i == j ? 0 : 1);
+            }
+          }
+        }
+      }
+      for (int j = 0; j < N * Margin; j++)
+      {
+        for (int k = 0; k < N * Margin; k++)
+        {
+          if (m.at(j).at(k))
+          {
+            edge_count_list.at(j)++;
+          }
+          if (test_print)
+            cout << m.at(j).at(k);
+        }
+        if (test_print)
+          cout << endl;
+      }
+    }
+
     ll best_diff = 100000;
     sort(edge_count_list.begin(), edge_count_list.end());
     for (ll j = 0; j < M; j++)
