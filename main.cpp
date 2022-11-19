@@ -139,6 +139,12 @@ void print_vector(vector<ll> v)
     cerr << v.at(i) << (v.size() - 1 == i ? '\n' : ' ');
   }
 }
+
+bool comp(const vector<int> &lh, const vector<int> &rh)
+{
+  return lh.size() > rh.size();
+}
+
 int main(int argc, char const *argv[])
 {
   random_device rd;
@@ -312,13 +318,16 @@ int main(int argc, char const *argv[])
       }
       vector<vector<int>> mv = d.groups();
       vector<int> deploy_vector;
+      sort(mv.begin(), mv.end(), comp);
       for (int j = 0; j < mv.size(); j++)
       {
+        // cerr << mv.at(j).size() << ' ';
         for (int k = 0; k < mv.at(j).size(); k++)
         {
           deploy_vector.push_back(mv.at(j).at(k));
         }
       }
+      // cerr << endl;
       vector<vector<ll>> m_copy = m;
       for (int j = 0; j < N * Margin; j++)
       {
