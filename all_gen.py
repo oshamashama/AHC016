@@ -4,8 +4,8 @@ import re
 
 now = 0
 
-M_x = 1
-eps_x = 1
+M_x = 10
+eps_x = 10
 case_x = 100
 if os.getcwd() == '/home/shama/AHC016':
   os.chdir('./tools')
