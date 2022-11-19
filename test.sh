@@ -47,10 +47,14 @@ do
     count=$((count + 1))
     sum=$((Score_num + sum))
     # mv vis.html vis/vis${f1%.txt}.html
+    echo "Score = "$Score_num", test_file : "$IN_FILE >&2
 done
 
-printf "%'d\n" $((sum / count))
-printf "%'d\n" $((sum / count * 50))
-printf "%'d\n" $sum
+# printf "%'d\n" $((sum / count))
+echo $((sum / count))  | sed -E ':l; s/^([0-9]+)([0-9]{3})/\1,\2/; t l;';
+# printf "%'d\n" $((sum / count * 50))
+echo $((sum / count * 50))  | sed -E ':l; s/^([0-9]+)([0-9]{3})/\1,\2/; t l;';
+# printf "%'d\n" $sum
+echo $sum  | sed -E ':l; s/^([0-9]+)([0-9]{3})/\1,\2/; t l;';
 
 
