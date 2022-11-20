@@ -1,6 +1,6 @@
 import csv
 
-with open('best_margin.csv', 'r') as f:
+with open('data/best_margin.csv', 'r') as f:
   data = csv.reader(f)
   v = [[] for _ in range(101)]
   for l in data:

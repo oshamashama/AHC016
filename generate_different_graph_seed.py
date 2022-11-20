@@ -45,7 +45,7 @@ for _ in range(1):
 
     # print(len(dict))
     # print(dict)
-    with open('memo{}node'.format(N), 'w') as f:
+    with open('data/memo{}node'.format(N), 'w') as f:
       for value in dict.values():
         # print(value)
         f.write('{}\n'.format(value))

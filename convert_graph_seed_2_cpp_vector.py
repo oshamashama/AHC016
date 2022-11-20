@@ -11,7 +11,7 @@ def to_cpp_vector(N, ls):
 
 res = 'vector<vector<ll>> node = {'
 for N in range(0,12):
-  with open('memo{}node'.format(N),'r') as f:
+  with open('data/memo{}node'.format(N),'r') as f:
     ls = list(f.read().split('\n'))[:-1]
     res += to_cpp_vector(N, ls)
 res += '};\n'

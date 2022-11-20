@@ -17,8 +17,8 @@ if os.getcwd() == '/home/shama/AHC016':
       subprocess.run(cmd)
   
   
-  subprocess.run(['rm', '-rf', '../all_data.csv'])
-  subprocess.run(['rm', '-rf', '../best_margin.csv'])
+  subprocess.run(['rm', '-rf', '../data/all_data.csv'])
+  subprocess.run(['rm', '-rf', '../data/best_margin.csv'])
 
   for margin in range(1,15+1,2):
     max_process = 8
@@ -71,11 +71,11 @@ if os.getcwd() == '/home/shama/AHC016':
           score_S = int(re.findall(r'Score\s=\s(\d+)',score)[0])
           sum_S += score_S
         print('M = {:3}, eps = {:4.2f}, margin = {:2}, sum_S = {:13}'.format(M,eps/100, margin,sum_S))
-        with open('../all_data.csv', 'a') as f:
+        with open('../data/all_data.csv', 'a') as f:
           f.write('{:3}, {:4.2f}, {:2}, {:13}\n'.format(M,eps/100, margin, sum_S))
         if sum_S > best_score:
           best_margin = margin
           best_score = sum_S
-      with open('../best_margin.csv', 'a') as f:
+      with open('../data/best_margin.csv', 'a') as f:
         f.write('{:3}, {:4.2f}, {:2}\n'.format(M,eps/100, best_margin))
       print('M = {:3}, eps = {:4.2f}, Best Margin = {:2}'.format(M,eps/100, best_margin))
